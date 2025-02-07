@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Ameba Search Asist
 // @namespace        http://tampermonkey.net/
-// @version        0.1
+// @version        0.2
 // @description        アメーバ検索の補助ツール　キー操作のみでリスト・ページ選択
 // @author        Ameba Blog User
 // @match        https://search.ameba.jp/*
@@ -118,9 +118,11 @@ function page_select(){
                 if(is_able()){
                     event.preventDefault();
                     select_down(); }}
+
             if(event.keyCode==13){ //「Enter」
-                event.preventDefault();
-                select_open(event); }
+                if(is_able()){
+                    event.preventDefault();
+                    select_open(event); }}
 
             if(event.keyCode==27){ //「ESC」
                 if(is_able()){
@@ -181,7 +183,26 @@ function page_select(){
                 if(items[k].style.outlineWidth=='2px'){
                     let link=items[k].querySelector('a');
                     if(link){
-                        link.click();}}}}
+                        if(!event.ctrlKey || !event.shiftKey){
+                            link.click(); }
+                        else if(event.ctrlKey && !event.shiftKey){
+                            link.dispatchEvent(ctrlClickEvent); }
+                        else if(!event.ctrlKey && event.shiftKey){
+                            link.dispatchEvent(shiftClickEvent); }}}}
+
+            //「Ctrl+Click」イベントを生成
+            let ctrlClickEvent=new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                ctrlKey: true });
+
+            //「Shift+Click」イベントを生成
+            let shiftClickEvent=new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                shiftKey: true });
+
+        } // select_open()
 
 
         let s_input=document.querySelector('.PcSuggestForm_Input');
