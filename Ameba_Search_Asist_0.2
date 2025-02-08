@@ -237,7 +237,7 @@ function page_select(){
                 '<p>Enter ：選択記事を開く</p>'+
                 '<p class="t">ブラウザのタブ</p>'+
                 '<p>Ctrl+Tab：タブを変更</p>'+
-                '<p>Ctrl+W：タブを閉る</p>'+
+                '<p>Ctrl+W：タブを閉じる</p>'+
                 '</div>'+
                 '<p class="lower">Search Asist'+
                 '<span class="open_help">？</span></p>'+
