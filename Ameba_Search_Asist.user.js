@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Ameba Search Asist
 // @namespace        http://tampermonkey.net/
-// @version        0.2
+// @version        0.3
 // @description        アメーバ検索の補助ツール　キー操作のみでリスト・ページ選択
 // @author        Ameba Blog User
 // @match        https://search.ameba.jp/*
@@ -115,9 +115,9 @@ function page_select(){
                     event.preventDefault();
                     select_up(); }}
             if(event.keyCode==40){ //「⇩」
-                if(is_able()){
-                    event.preventDefault();
-                    select_down(); }}
+                event.preventDefault();
+                to_able();
+                select_down(); }
 
             if(event.keyCode==13){ //「Enter」
                 if(is_able()){
@@ -224,11 +224,17 @@ function page_select(){
                 return true; }}
 
 
+        function to_able(){
+            let s_input=document.querySelector('.PcSuggestForm_Input');
+            if(s_input && s_input==document.activeElement){
+                s_input.blur(); }}
+
 
 
         let pagination=document.querySelector('.PcResultPagination');
         if(pagination){
             let help=
+                '<div id="help_min_button">H</div>'+
                 '<div id="astool_help">'+
                 '<div class="upper">'+
                 '<p class="t">Ameba検索画面</p>'+
@@ -250,11 +256,37 @@ function page_select(){
                 '.lower { padding: 2px 10px; color: #fff; background: #bcbfc3; text-align: center; } '+
                 '.open_help { display: inline-block; height: 16px; padding: 1px 2px 1px 1px; '+
                 'margin-left: 12px; vertical-align: -1px; font: bold 16px/18px Meiryo; color: #fff; '+
-                'border-radius: 30px; background: #666; cursor: pointer; }'+
+                'border-radius: 30px; background: #666; cursor: pointer; } '+
+                '#help_min_button { position: absolute; top: -36px; left: -36px; '+
+                'font: bold 15px Meiryo; padding: 0 5px; height: 21px; color: #fff; '+
+                'border-radius: 50px; background: #666; cursor: pointer; }'+
                 '</style></div>';
 
             if(!pagination.querySelector('#astool_help')){
                 pagination.insertAdjacentHTML('afterbegin', help); }
+
+            let help_min=document.querySelector('#help_min_button');
+            let asa_help=document.querySelector('#astool_help');
+            if(help_min && asa_help){
+                let help_s=sessionStorage.getItem('ASA_hs');
+                if(!help_s){
+                    help_s=1;
+                    sessionStorage.setItem('ASA_hs', 1); }
+
+                if(help_s==1){
+                    asa_help.style.display='block'; }
+                else{
+                    help_s=0;
+                    asa_help.style.display='none'; }
+
+                help_min.onclick=()=>{
+                    if(help_s==1){
+                        help_s=0;
+                        asa_help.style.display='none'; }
+                    else{
+                        help_s=1;
+                        asa_help.style.display='block'; }
+                    sessionStorage.setItem('ASA_hs', help_s); }}
 
             open_help(); }
 
