@@ -12,8 +12,6 @@
 // ==/UserScript==
 
 
-let listen=Symbol();
-
 setTimeout(()=>{
     if(document.querySelector('.YtZu3q_root')){ // 検索ページャーのある画面でのみ動作
         page_select(); }
